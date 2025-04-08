@@ -2,8 +2,10 @@ import psycopg2
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, exc
 from sqlalchemy.orm import Mapped, mapped_column
+import logging
+logger = logging.getLogger(__name__)
 
 class Base(DeclarativeBase):
   pass
@@ -23,3 +25,12 @@ class User(db.Model):
     zip: Mapped[int] = mapped_column(Integer)
     phone: Mapped[str] = mapped_column(String(20))
 
+
+def connectDB(app):
+    try:
+        with app.app_context():
+            db.create_all()
+            return True 
+    except exc.OperationalError as e:
+        logger.error("cant connect to database error {}".format(e))
+        return False 

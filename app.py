@@ -24,6 +24,11 @@ connStr = "postgresql://{u}:{p}@{h}/{d}".format(
 app.config["SQLALCHEMY_DATABASE_URI"] = connStr 
 models.db.init_app(app)
 
+# normal we would create task to create tables once -
+# not every time app starts
+if models.connectDB(app) is False:
+    exit("cant connect to DB. Exiting...")
+
 @app.route("/")
 def hello_world():
     return "Glorious index page"
