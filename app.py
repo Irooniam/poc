@@ -41,8 +41,8 @@ def hello_world():
 def add_lead():
     try:
         data = request.get_json()
-        parser.parseRequest(data)
-
+        lead = parser.parseRequest(data)
+        logger.info(lead)
     except parser.LeadsError as e:
         return jsonify({"error": "request has error: {}".format(e)}), 400
     except BadRequest as e:
