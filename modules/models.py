@@ -12,7 +12,7 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(model_class=Base)
 
-class Leads(db.Model):
+class Lead(db.Model):
     __tablename__ = "leads"
     id: Mapped[int] = mapped_column(primary_key=True)
     first_name: Mapped[str] = mapped_column(String(100))
@@ -20,10 +20,10 @@ class Leads(db.Model):
     address1: Mapped[str] = mapped_column(String(100))
     address2: Mapped[str] = mapped_column(String(100))
     city: Mapped[str] = mapped_column(String(100))
-    state: Mapped[str] = mapped_column(String(2))
-    city: Mapped[str] = mapped_column(String(100))
+    state: Mapped[str] = mapped_column(String(20))
     zip: Mapped[int] = mapped_column(Integer)
     phone: Mapped[str] = mapped_column(String(20))
+    email: Mapped[str] = mapped_column(String(100))
 
 
 def connectDB(app):

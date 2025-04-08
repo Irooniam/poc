@@ -42,6 +42,9 @@ def add_lead():
     try:
         data = request.get_json()
         lead = parser.parseRequest(data)
+
+        #finally insert into DB
+        parser.addLead(lead)
         logger.info(lead)
     except parser.LeadsError as e:
         return jsonify({"error": "request has error: {}".format(e)}), 400

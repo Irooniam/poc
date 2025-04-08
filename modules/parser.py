@@ -1,8 +1,10 @@
+import json
 import base64
 import binascii
 import logging
 import os
 from modules import crypt
+from modules import models
 logger = logging.getLogger(__name__)
 
 class LeadsError(Exception):
@@ -27,5 +29,33 @@ def parseRequest(data):
     except ValueError as e:
         raise LeadsError("unable to decrypt payload with error {}".format(e))
 
-    return cleartext
+    #finally load the as json and make sure all keys exist
+    try:
+        logger.info(cleartext)
+        j = json.loads(cleartext)
+    except ValueError as e:
+        raise LeadsError("unable to load json from cleartext error {}".format(e))
+
+    fields=["first_name", "last_name", "address1", "address2", "city", "state", "zip", "phone","email"]
+    for f in fields:
+        if f not in j:
+            raise LeadsError("missing required field {} in JSON".format(f))
+
+    return j 
+
+def addLead(data):
+    lead = models.Lead(
+            first_name = data["first_name"],
+            last_name = data["last_name"],
+            address1 = data["address1"],
+            address2 = data["address2"],
+            city = data["city"],
+            state = data["state"],
+            zip = data["zip"],
+            phone = data["phone"],
+            email = data["email"]
+    )
+    models.db.session.add(lead)
+    models.db.session.commit()
+
 
