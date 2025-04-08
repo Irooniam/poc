@@ -1,0 +1,6 @@
+Flask
+sqlalchemy
+psycopg2
+pycrypto
+python-dotenv
+Flask-SQLAlchemy
