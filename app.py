@@ -1,6 +1,8 @@
-from flask import Flask
+from werkzeug.exceptions import BadRequest
+from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from modules import models 
+from modules import parser
 import os
 import logging
 
@@ -8,6 +10,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
+#cant do much if we dont have config file
 if not load_dotenv():
     exit("do not have .env file")
 
@@ -33,9 +36,19 @@ if models.connectDB(app) is False:
 def hello_world():
     return "Glorious index page"
 
+# endpoint expects a base64 encoded string
 @app.route("/lead", methods=["POST"])
 def add_lead():
-    return "a new lead"
+    try:
+        data = request.get_json()
+        parser.parseRequest(data)
+
+    except parser.LeadsError as e:
+        return jsonify({"error": "request has error: {}".format(e)}), 400
+    except BadRequest as e:
+        return jsonify({"error": "request has error: {}".format(e)}), 400
+    
+    return jsonify({"OK": "true"}), 200 
 
 
 if __name__ == '__main__':
