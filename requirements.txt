@@ -1,6 +1,6 @@
 Flask
 sqlalchemy
 psycopg2
-pycrypto
+pycryptodome
 python-dotenv
 Flask-SQLAlchemy
